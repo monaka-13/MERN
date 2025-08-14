@@ -53,13 +53,83 @@
 
 ---
 
-## 5. サーバーとクライアントの接続
-- フロントエンドのAPIリクエスト先（例：axiosのbaseURL）をRenderのbackendのURLに変更
-- Viteの場合、.envファイルに
-  ```
-  VITE_API_URL=https://xxxxxx.onrender.com/api
-  ```
-  などと記載し、`import.meta.env.VITE_API_URL` で参照
+
+## 5. サーバーとクライアントの接続（詳細）
+
+### 1. Renderでバックエンド（API）のURLを確認
+1. Renderのダッシュボードで、作成したバックエンド（Web Service）をクリックします。
+2. 上部に「Service URL」や「Live URL」として `https://xxxxxx.onrender.com` のようなURLが表示されます。
+   例: `https://mern-stl2.onrender.com`
+
+
+### 2. フロントエンドのAPIリクエスト先を修正（さらに詳しく）
+
+#### 【なぜ修正が必要？】
+ローカル開発時は `http://localhost:3000/api` など自分のパソコンのサーバーにアクセスしていましたが、
+Renderにデプロイした後は「Render上のサーバー（Web Service）」のURLにアクセスする必要があります。
+
+#### 【RenderのバックエンドURLの調べ方】
+1. Renderのダッシュボードで、作成したバックエンド（Web Service）をクリックします。
+2. 上部に「Service URL」や「Live URL」として `https://xxxxxx.onrender.com` のようなURLが表示されます。
+   例: `https://mern-backend-abc123.onrender.com`
+
+#### 【どこを修正する？】
+フロントエンドのAPIリクエスト部分（例：axiosやfetchでAPIを呼び出している部分）を探します。
+
+##### 例1: axiosを使っている場合
+```js
+// 変更前（ローカル用）
+axios.defaults.baseURL = "http://localhost:3000/api";
+
+// 変更後（Render用）
+axios.defaults.baseURL = "https://mern-backend-abc123.onrender.com/api";
+```
+
+##### 例2: fetchを使っている場合
+```js
+// 変更前
+fetch("http://localhost:3000/api/tasks")
+
+// 変更後
+fetch("https://mern-backend-abc123.onrender.com/api/tasks")
+```
+
+#### 【ViteやReactで環境変数を使う場合】
+1. フロントエンドのプロジェクト直下に `.env` ファイルを作成（または編集）します。
+2. 以下のように記載します。
+   ```
+   VITE_API_URL=https://mern-backend-abc123.onrender.com/api
+   ```
+3. フロントエンドのコードで `import.meta.env.VITE_API_URL` を使ってAPIのURLを参照します。
+   ```js
+   axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+   // または
+   fetch(`${import.meta.env.VITE_API_URL}/tasks`)
+   ```
+
+#### 【修正後の流れ】
+1. .envやコードを修正したら、必ずGitHubにpushします。
+2. Renderのフロントエンド（Static Site）で「Manual Deploy」や「Clear cache & deploy」を実行します。
+3. フロントエンドのURLにアクセスし、API経由でデータ取得や送信ができるか確認します。
+
+---
+
+### 3. Viteの場合のおすすめ設定
+1. フロントエンドのプロジェクト直下に `.env` ファイルを作成（または編集）します。
+2. 以下のように記載します。
+   ```
+   VITE_API_URL=https://mern-backend-abc123.onrender.com/api
+   ```
+3. フロントエンドのコードで `import.meta.env.VITE_API_URL` を使ってAPIのURLを参照します。
+   ```js
+   axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+   ```
+
+### 4. デプロイ後の注意
+- .envファイルを修正した場合は、必ずGitHubにpushし、Renderで再デプロイ（または「Manual Deploy」）してください。
+- APIのURLが正しく設定されていないと、フロントエンドからデータ取得や送信ができません。
+
+---
 
 ---
 
