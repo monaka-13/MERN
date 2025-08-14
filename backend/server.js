@@ -1,4 +1,4 @@
-const expres = require("express");
+const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(
-  'mongodb+srv://user1:1234@cluster0.f9d6o.gcp.mongodb.net/Activitiy', {
+  'mongodb+srv://kay:Password@cluster0.znmclxp.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
