@@ -12,8 +12,8 @@ export default function CreateTask({ onTaskCreated }) {
       setMessage("タスクを追加しました。");
       setActivity("");
       if (onTaskCreated) onTaskCreated();
-    } catch () {
-      setMessage("エラーが発生しました。");
+    } catch (error) {
+      setMessage("エラーが発生しました。"+error);
     }
   };
 
