@@ -75,7 +75,7 @@ router.route("/update/:id").put(async (req, res) => {
   }
 });
 
-router.route("delete/:id").delete(async (req, res) => {
+router.route("/delete/:id").delete(async (req, res) => {
   try {
     const task = await TaskModel.findByIdAndDelete(req.params.id);
     if (!task) {
