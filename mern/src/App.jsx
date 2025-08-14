@@ -9,12 +9,10 @@ export default function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <div className="container">
+        <Routes className="container">
             <Route path="/" element={<SimpleTodosList />} />
             <Route path="/create" element={<CreateTask />} />
             <Route path="/update/:id" element={<EditTask />} />
-          </div>
         </Routes>
       </BrowserRouter>
     </>

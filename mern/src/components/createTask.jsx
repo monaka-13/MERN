@@ -8,7 +8,7 @@ export default function CreateTask({ onTaskCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/tasks/add", { activity });
+  await axios.post("/api/tasks/add", { activity });
       setMessage("タスクを追加しました。");
       setActivity("");
       if (onTaskCreated) onTaskCreated();

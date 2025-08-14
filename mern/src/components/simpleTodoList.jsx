@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./navbar";
 
-const Todo = (props) => {
+const Todo = (props) => (
   <tr className="d-flex">
     <td className="col-10">{props.todo}</td>
     <td className="col-2" style={{ textAlign: "right" }}>
@@ -13,21 +13,49 @@ const Todo = (props) => {
       >
         Edit
       </button>
+      {"  "}
       <button
         onClick={() => {
           props.deleteTodo(props.keyt);
         }}
       >
-        Delete
+        delete
       </button>
     </td>
-  </tr>;
-};
+  </tr>
+);
+
 export default function SimpleTodosList() {
-  const editTodo = (id) => {};
-  const deleteTodo = (id) => {};
+  const [todos, setTodoList] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/tasks/")
+      .then((response) => {
+        setTodoList(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const deleteTodo = (id) => {
+    axios
+      .delete("/api/tasks/delete/" + id)
+      .then((response) => {
+        setTodoList(todos.filter((el) => el._id !== id));
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const editTodo = (id) => {
+    window.location = "/update/" + id;
+  };
+
   return (
-    <>
+    <div>
       <Navbar />
       <h3>Logged Todos</h3>
       <table className="table">
@@ -37,17 +65,19 @@ export default function SimpleTodosList() {
           </tr>
         </thead>
         <tbody>
-          {todos.map((todo) => (
-            <Todo
-              todo={todo.activity}
-              keyt={todo._id}
-              key={todo._id}
-              editTodo={editTodo}
-              deleteTodo={deleteTodo}
-            />
-          ))}
+          {todos.map((todo) => {
+            return (
+              <Todo
+                todo={todo.activity}
+                key={todo._id}
+                keyt={todo._id}
+                deleteTodo={deleteTodo}
+                editTodo={editTodo}
+              />
+            );
+          })}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
